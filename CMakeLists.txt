@@ -6,13 +6,16 @@ HunterGate(
     SHA1 "5659b15dc0884d4b03dbd95710e6a1fa0fc3258d"
 )
 
+project(print)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_EXAMPLES "Build examples" OFF)
 option(BUILD_TESTS "Build tests" OFF)
 
-project(print)
+hunter_add_package(GTest)
+find_package(GTest CONFIG REQUIRED)
 
 add_library(print STATIC ${CMAKE_CURRENT_SOURCE_DIR}/sources/print.cpp)
 
@@ -34,10 +37,9 @@ if(BUILD_EXAMPLES)
 endif()
 if(BUILD_TESTS)
   enable_testing()
-  add_subdirectory(third-party/gtest)
   file(GLOB ${PROJECT_NAME}_TEST_SOURCES tests/*.cpp)
   add_executable(check ${${PROJECT_NAME}_TEST_SOURCES})
-  target_link_libraries(check ${PROJECT_NAME} gtest_main)
+  target_link_libraries(check ${PROJECT_NAME} GTest::gtest_main)
   add_test(NAME check COMMAND check)
 endif()
 
